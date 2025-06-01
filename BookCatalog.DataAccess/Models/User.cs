@@ -1,10 +1,11 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 
 namespace BookCatalog.DataAccess.Models
 {
-    public class User
+    public class User : IdentityUser
     {
         [MaxLength(100)]
         public string AccessToken { get; set; } = GenerateOpaqueToken();
