@@ -5,6 +5,7 @@ namespace BookCatalog.DataAccess.Models
 {
     public class Genre
     {
+        [Key]
         public int Id { get; set; }
 
         [MaxLength(255)]
