@@ -1,4 +1,6 @@
 
+using BookCatalog.DataAccess;
+
 namespace BookCatalog.WebAPI
 {
     public class Program
@@ -8,6 +10,8 @@ namespace BookCatalog.WebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Services.AddDataAccess(builder.Configuration); //m
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

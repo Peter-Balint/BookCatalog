@@ -16,8 +16,10 @@ namespace BookCatalog.DataAccess.Models
 
         [ForeignKey("Genre")]
         public int GenreId {  get; set; }
+        public Genre Genre { get; set; } = null!;
 
         [ForeignKey("Author")]
         public int AuthorId {  get; set; }
+        public Author Author { get; set; } = null!;
     }
 }
