@@ -9,6 +9,10 @@ namespace BookCatalog.DataAccess
     public class BookCatalogDbContext : IdentityDbContext<User, IdentityRole, string>
     {
         public BookCatalogDbContext(DbContextOptions<BookCatalogDbContext> options) : base(options) { }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
 
         public DbSet<Book> Books { get; set; } = null!;
         public DbSet<Author> Authors { get; set; } = null!;

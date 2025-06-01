@@ -1,5 +1,7 @@
 
 using BookCatalog.DataAccess;
+using BookCatalog.DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookCatalog.WebAPI
 {
@@ -9,14 +11,15 @@ namespace BookCatalog.WebAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
-            builder.Services.AddDataAccess(builder.Configuration); //m
+            builder.Services.AddDataAccess(builder.Configuration);
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
 
             var app = builder.Build();
 
@@ -29,10 +32,19 @@ namespace BookCatalog.WebAPI
 
             app.UseHttpsRedirection();
 
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                var context = scope.ServiceProvider.GetRequiredService<BookCatalogDbContext>();
+                DbInitializer.Initialize(context, userManager);
+            }
 
             app.Run();
         }
