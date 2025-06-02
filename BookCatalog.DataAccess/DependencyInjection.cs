@@ -1,5 +1,6 @@
 ﻿
 using BookCatalog.DataAccess.Models;
+using BookCatalog.DataAccess.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +18,7 @@ namespace BookCatalog.DataAccess
                 .UseSqlServer(connectionString)
             );
 
-            //todo : add services here
+            services.AddTransient<BooksService>();
 
             services.AddIdentity<User,IdentityRole>(options =>
             {

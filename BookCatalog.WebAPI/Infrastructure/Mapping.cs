@@ -9,7 +9,8 @@ namespace BookCatalog.WebAPI.Infrastructure
         public Mapping()
         {
             CreateMap<Book, BookDto>();
-            CreateMap<BookDto, Book>();
+            CreateMap<BookRequestDto, Book>(MemberList.Source);
+
             CreateMap<Author,AuthorDto>();
             CreateMap<AuthorDto, Author>();
             CreateMap<Genre, GenreDto>();
