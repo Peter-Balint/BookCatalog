@@ -8,13 +8,14 @@
 
 <h3>Books currently in catalog</h3>
 
+
 <table class = "table table-striped">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Genre</th>
-            <th>Published</th>
+            <th @onclick=" () => OrderListBy(b => b.Name) ">Title</th>
+            <th @onclick=" () => OrderListBy(b => b.Author.Name) ">Author</th>
+            <th @onclick=" () => OrderListBy(b => b.Genre.Name) ">Genre</th>
+            <th @onclick=" () => OrderListBy(b => b.PublishedAt) ">Published</th>
             <th>Score</th>
         </tr>
     </thead>
@@ -26,7 +27,7 @@
                 <td>@book.Author.Name</td>
                 <td>@book.Genre.Name</td>
                 <td>@book.PublishedAt.Year</td>
-                
+
             </tr>
         }
     </tbody>
@@ -43,5 +44,8 @@
 
     private void ClearFilters(){
         BooksDisplayed = Model.Books;
+    }
+    private void OrderListBy<T>(Func<BookDto,T> f){
+        BooksDisplayed = Model.Books.OrderBy(f).ToList();
     }
 }
