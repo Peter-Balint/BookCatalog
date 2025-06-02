@@ -1,0 +1,47 @@
+﻿@using BookCatalog.Blazor.Model;
+@using BookCatalog.Shared.DTOs;
+
+@page "/bookListing"
+
+@inject BookCatalogModel Model;
+@inject NavigationManager Navigation;
+
+<h3>Books currently in catalog</h3>
+
+<table class = "table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Published</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(BookDto book in BooksDisplayed)
+        {
+            <tr>
+                <td>@book.Name</td>
+                <td>@book.Author.Name</td>
+                <td>@book.Genre.Name</td>
+                <td>@book.PublishedAt.Year</td>
+                
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<BookDto> BooksDisplayed { get; set; } = new List<BookDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Model.ReadBooksAsync();
+        BooksDisplayed = Model.Books;
+    }
+
+    private void ClearFilters(){
+        BooksDisplayed = Model.Books;
+    }
+}

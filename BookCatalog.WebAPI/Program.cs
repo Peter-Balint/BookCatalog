@@ -22,6 +22,19 @@ namespace BookCatalog.WebAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Configure CORS policy for Blazor client
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("BlazorPolicy",
+                    policy =>
+                    {
+                        policy.WithOrigins(builder.Configuration["BlazorUrl"]
+                                           ?? throw new ArgumentNullException("BlazorUrl"))
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
+                    });
+            });
 
             var app = builder.Build();
 
@@ -31,6 +44,8 @@ namespace BookCatalog.WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("BlazorPolicy");
 
             app.UseHttpsRedirection();
 
