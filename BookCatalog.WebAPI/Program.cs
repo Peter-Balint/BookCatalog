@@ -1,6 +1,7 @@
 
 using BookCatalog.DataAccess;
 using BookCatalog.DataAccess.Models;
+using BookCatalog.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 
 namespace BookCatalog.WebAPI
@@ -13,6 +14,7 @@ namespace BookCatalog.WebAPI
 
 
             builder.Services.AddDataAccess(builder.Configuration);
+            builder.Services.AddAutoMapperCustom();
 
 
             builder.Services.AddControllers();
