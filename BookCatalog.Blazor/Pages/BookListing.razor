@@ -47,7 +47,7 @@
 @code {
     private List<BookDto> BooksDisplayed { get; set; } = new List<BookDto>();
 
-    private enum Filter{ Title, Author, Genre}
+    private enum Filter{ Title, Author, Genre }
 
     private Filter filterBy = Filter.Title;
     private Filter FilterBy
@@ -87,20 +87,25 @@
         switch(filterBy){
             case Filter.Title : 
                 {
-                    BooksDisplayed = Model.Books.Where(b => b.Name.Contains(filterText)).ToList();
+                    BooksDisplayed = Model.Books
+                        .Where(b => b.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                     break;
                 }
             case Filter.Author:
                 {
-                    BooksDisplayed = Model.Books.Where(b => b.Author.Name.Contains(filterText)).ToList();
+                    BooksDisplayed = Model.Books
+                        .Where(b => b.Author.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                     break;
                 }
             case Filter.Genre:
                 {
-                    BooksDisplayed = Model.Books.Where(b => b.Genre.Name.Contains(filterText)).ToList();
+                    BooksDisplayed = Model.Books
+                        .Where(b => b.Genre.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                     break;
                 }
         }
-        //StateHasChanged();
     }
 }
