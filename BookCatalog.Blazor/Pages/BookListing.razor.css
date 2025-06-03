@@ -4,3 +4,7 @@ th {
     outline-style: groove;
     outline-width: 2px;
 }
+
+.filterInput {
+    font-size: 1.3em;
+}

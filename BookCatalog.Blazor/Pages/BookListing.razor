@@ -1,5 +1,6 @@
 ﻿@using BookCatalog.Blazor.Model;
 @using BookCatalog.Shared.DTOs;
+@using BookCatalog.Blazor.Components;
 
 @page "/bookListing"
 <PageTitle>Book Listing</PageTitle>
@@ -9,6 +10,15 @@
 
 <h2>Books currently in catalog</h2><hr/><br/>
 
+<div class="filterInput">
+    Search by:
+    <InputRadioGroup @bind-Value = "@FilterBy">
+        <InputRadio Value="Filter.Title " /> <label>Title</label>
+        <InputRadio Value="Filter.Author " /> <label>Author</label>
+        <InputRadio Value="Filter.Genre " /> <label>Genre</label>
+    </InputRadioGroup>
+    <KeystrokeInputText @bind-Value="FilterText"></KeystrokeInputText>
+</div><hr/><br/>
 
 <table class = "table table-striped">
     <thead>
@@ -37,6 +47,28 @@
 @code {
     private List<BookDto> BooksDisplayed { get; set; } = new List<BookDto>();
 
+    private enum Filter{ Title, Author, Genre}
+
+    private Filter filterBy = Filter.Title;
+    private Filter FilterBy
+    {
+        get{ return filterBy;}
+        set{
+            filterBy = value;
+            FilterStateChanged();
+        }
+    }
+
+    private string filterText = "";
+    private string FilterText
+    {
+        get{ return filterText; }
+        set{
+            filterText = value;
+            FilterStateChanged();
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await Model.ReadBooksAsync();
@@ -48,5 +80,27 @@
     }
     private void OrderListBy<T>(Func<BookDto,T> f){
         BooksDisplayed = Model.Books.OrderBy(f).ToList();
+    }
+
+    private void FilterStateChanged()
+    {
+        switch(filterBy){
+            case Filter.Title : 
+                {
+                    BooksDisplayed = Model.Books.Where(b => b.Name.Contains(filterText)).ToList();
+                    break;
+                }
+            case Filter.Author:
+                {
+                    BooksDisplayed = Model.Books.Where(b => b.Author.Name.Contains(filterText)).ToList();
+                    break;
+                }
+            case Filter.Genre:
+                {
+                    BooksDisplayed = Model.Books.Where(b => b.Genre.Name.Contains(filterText)).ToList();
+                    break;
+                }
+        }
+        //StateHasChanged();
     }
 }
