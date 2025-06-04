@@ -26,6 +26,11 @@ namespace BookCatalog.DataAccess.Services
 
         public async Task AddAsync(Author author)
         {
+            if(_context.Authors.Where(a => a.Name == author.Name).Any())
+            {
+                return;
+            }
+
             await _context.Authors.AddAsync(author);
             await _context.SaveChangesAsync();
         }

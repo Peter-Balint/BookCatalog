@@ -11,7 +11,7 @@
 @if(addingFailed){
     <div class="alert-danger">
         Adding entry failed, please try again
-    </div>
+    </div><hr/><br/>
 }
 
 <div class="container">
@@ -33,6 +33,25 @@
         }
     </EditForm>
 </div><hr/><br/>
+<div class="container">
+    <EditForm Model="genre" OnValidSubmit="SubmitGenre" FormName="GenreForm" class="row">
+        <div class="col-4">
+            <label>
+                Add new genre:
+                <InputText @bind-Value="genre.Name"></InputText>
+            </label>
+        </div>
+        <div class="col-2">
+            <button type="submit">Add genre</button>
+        </div>
+        @if (lastAddedType == Models.Genre)
+        {
+            <div class="col alert-success">
+                @lastAddedName was added to genres
+            </div>
+        }
+    </EditForm>
+</div><hr/><br/>
 
 @code {
     private BookRequestDto book;
@@ -44,7 +63,6 @@
     private Models lastAddedType = Models.None;
     private string lastAddedName = "";
     private bool addingFailed = false;
-    //decide wether the last added is of the corresponding type and display the message
 
     private async void SubmitAuthor(){
         try
@@ -53,6 +71,21 @@
             addingFailed = false;
             lastAddedName = author.Name;
             lastAddedType = Models.Author;
+        }
+        catch
+        {
+            addingFailed = true;
+            lastAddedType = Models.None;
+        }
+        StateHasChanged();
+    }
+    private async void SubmitGenre(){
+        try
+        {
+            await Model.AddGenreAsync(genre);
+            addingFailed = false;
+            lastAddedName = genre.Name;
+            lastAddedType = Models.Genre;
         }
         catch
         {

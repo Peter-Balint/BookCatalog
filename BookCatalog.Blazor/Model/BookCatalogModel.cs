@@ -72,5 +72,31 @@ namespace BookCatalog.Blazor.Model
             }
         }
 
+        public async Task ReadGenresAsync()
+        {
+            HttpResponseMessage response = await _client.GetAsync("api/genres/");
+
+            if (response.IsSuccessStatusCode)
+            {
+                Genres = await response.Content.ReadAsAsync<List<GenreDto>>();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
+        public async Task AddGenreAsync(GenreDto genre)
+        {
+            HttpResponseMessage response = await _client.PostAsJsonAsync("api/genres/", genre);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await ReadGenresAsync();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
     }
 }
