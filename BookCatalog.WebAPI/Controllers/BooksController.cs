@@ -3,7 +3,6 @@ using BookCatalog.DataAccess.Models;
 using BookCatalog.DataAccess.Services;
 using BookCatalog.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace BookCatalog.WebAPI.Controllers
 {

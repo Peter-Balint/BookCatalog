@@ -1,0 +1,64 @@
+﻿@using BookCatalog.Shared.DTOs;
+@using BookCatalog.Blazor.Model;
+
+@page "/creation"
+<PageTitle>Creation</PageTitle>
+
+@inject BookCatalogModel Model;
+
+<h3>Creation</h3><hr/><br/>
+
+@if(addingFailed){
+    <div class="alert-danger">
+        Adding entry failed, please try again
+    </div>
+}
+
+<div class="container">
+    <EditForm Model="author" OnValidSubmit="SubmitAuthor" FormName="AuthorForm" class="row">
+        <div class="col-4">
+            <label>
+                Add new author:
+                <InputText @bind-Value="author.Name"></InputText>
+            </label>
+        </div>
+        <div class="col-2">
+            <button type="submit">Add author</button>
+        </div>
+        @if (lastAddedType == Models.Author)
+        {
+            <div class="col alert-success">
+                @lastAddedName was added to authors
+            </div>
+        }
+    </EditForm>
+</div><hr/><br/>
+
+@code {
+    private BookRequestDto book;
+    private GenreDto genre = new GenreDto();
+    private AuthorDto author = new AuthorDto();
+
+    private enum Models{ Book, Author, Genre, None };
+
+    private Models lastAddedType = Models.None;
+    private string lastAddedName = "";
+    private bool addingFailed = false;
+    //decide wether the last added is of the corresponding type and display the message
+
+    private async void SubmitAuthor(){
+        try
+        {
+            await Model.AddAuthorAsync(author);
+            addingFailed = false;
+            lastAddedName = author.Name;
+            lastAddedType = Models.Author;
+        }
+        catch
+        {
+            addingFailed = true;
+            lastAddedType = Models.None;
+        }
+        StateHasChanged();
+    }
+}

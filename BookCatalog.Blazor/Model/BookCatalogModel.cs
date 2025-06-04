@@ -1,5 +1,6 @@
 ﻿
 using BookCatalog.Shared.DTOs;
+using System.Runtime.InteropServices;
 
 namespace BookCatalog.Blazor.Model
 {
@@ -8,6 +9,8 @@ namespace BookCatalog.Blazor.Model
         private HttpClient _client;
 
         public List<BookDto> Books { get; private set; } = new List<BookDto>();
+        public List<AuthorDto> Authors { get; private set; } = new List<AuthorDto>();
+        public List<GenreDto> Genres { get; private set; } = new List<GenreDto>();
 
         public BookCatalogModel(HttpClient httpClient)
         {
@@ -21,6 +24,47 @@ namespace BookCatalog.Blazor.Model
             if (response.IsSuccessStatusCode)
             {
                 Books = await response.Content.ReadAsAsync<List<BookDto>>();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
+        public async Task AddBookAsync(BookRequestDto book)
+        {
+            HttpResponseMessage response = await _client.PostAsJsonAsync("api/books/",book);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await ReadBooksAsync();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
+
+        //todo: if i have time, refactor all these read functions into singular readlist with string and generic dto type parameters
+        public async Task ReadAuthorsAsync() 
+        {
+            HttpResponseMessage response = await _client.GetAsync("api/authors/");
+
+            if (response.IsSuccessStatusCode)
+            {
+                Authors = await response.Content.ReadAsAsync<List<AuthorDto>>();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
+        public async Task AddAuthorAsync(AuthorDto author)
+        {
+            HttpResponseMessage response = await _client.PostAsJsonAsync("api/authors/", author);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await ReadAuthorsAsync();
             }
             else
             {
