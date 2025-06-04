@@ -17,6 +17,25 @@ namespace BookCatalog.Blazor.Model
             _client = httpClient;
         }
 
+
+        //this can still be cool, but it doesn't work
+        public async Task ReadListAsync<Dto>(string endPoint, List<Dto> list)
+        {
+            HttpResponseMessage response = await _client.GetAsync($"api/{endPoint}/");
+
+            if (response.IsSuccessStatusCode)
+            {
+                list = await response.Content.ReadAsAsync<List<Dto>>();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
+
+        
+
+
         public async Task ReadBooksAsync()
         {
             HttpResponseMessage response = await _client.GetAsync("api/books/");
@@ -37,6 +56,7 @@ namespace BookCatalog.Blazor.Model
             if (response.IsSuccessStatusCode)
             {
                 await ReadBooksAsync();
+                //await ReadListAsync("books",Books);
             }
             else
             {
@@ -44,7 +64,6 @@ namespace BookCatalog.Blazor.Model
             }
         }
 
-        //todo: if i have time, refactor all these read functions into singular readlist with string and generic dto type parameters
         public async Task ReadAuthorsAsync() 
         {
             HttpResponseMessage response = await _client.GetAsync("api/authors/");

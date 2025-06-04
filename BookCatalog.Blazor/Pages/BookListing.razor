@@ -72,6 +72,7 @@
     protected override async Task OnInitializedAsync()
     {
         await Model.ReadBooksAsync();
+        //await Model.ReadListAsync("books", Model.Books);
         BooksDisplayed = Model.Books;
     }
 
