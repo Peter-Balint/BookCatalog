@@ -33,7 +33,7 @@
     <tbody>
         @foreach(BookDto book in BooksDisplayed)
         {
-            <tr>
+            <tr @onclick="()=>GoToDetailedBook(book.Id)">
                 <td>@book.Name</td>
                 <td>@book.Author.Name</td>
                 <td>@book.Genre.Name</td>
@@ -108,5 +108,9 @@
                     break;
                 }
         }
+    }
+
+    private void GoToDetailedBook(int id){
+        Navigation.NavigateTo($"/book/{id}");
     }
 }
