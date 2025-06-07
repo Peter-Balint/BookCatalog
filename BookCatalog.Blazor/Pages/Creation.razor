@@ -16,10 +16,12 @@
 
 <div class="container">
     <EditForm Model="author" OnValidSubmit="SubmitAuthor" FormName="AuthorForm" class="row">
+        <DataAnnotationsValidator />
         <div class="col-4">
             <label>
                 Add new author:
                 <InputText @bind-Value="author.Name"></InputText>
+                <ValidationMessage For="@(() => author.Name)" />
             </label>
         </div>
         <div class="col-2">
@@ -35,10 +37,12 @@
 </div><hr/><br/>
 <div class="container">
     <EditForm Model="genre" OnValidSubmit="SubmitGenre" FormName="GenreForm" class="row">
+        <DataAnnotationsValidator />
         <div class="col-4">
             <label>
                 Add new genre:
                 <InputText @bind-Value="genre.Name"></InputText>
+                <ValidationMessage For="@(() => genre.Name)" />
             </label>
         </div>
         <div class="col-2">
@@ -53,8 +57,75 @@
     </EditForm>
 </div><hr/><br/>
 
+
+<EditForm Model="book" OnValidSubmit="SubmitBook" FormName="BookForm" class="container">
+    <div class="row">
+        <DataAnnotationsValidator />
+        <div class="col-4">
+            <label>
+                Title:
+                <InputText @bind-Value="book.Name"></InputText>
+                <ValidationMessage For="@(() => book.Name)" />
+            </label>
+        </div>
+        <div class="col-4">
+            <label>
+                Published at:
+                <InputDate @bind-Value="book.PublishedAt"></InputDate>
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <label>
+                Synopsis:
+                <InputTextArea @bind-Value="book.Synopsis" style="width: 50em;"></InputTextArea>
+                <ValidationMessage For="@(() => book.Synopsis)" />
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label>
+                Genre:
+                <InputSelect @bind-Value="bookGenreName">
+                    @foreach(GenreDto Genre in Model.Genres){
+                        <option>@Genre.Name</option>
+                    }
+                </InputSelect>
+            </label>
+        </div>
+        <div class="col-4">
+            <label>
+                Genre:
+                <InputSelect @bind-Value="bookAuthorName">
+                    @foreach (AuthorDto author in Model.Authors)
+                    {
+                        <option>@author.Name</option>
+                    }
+                </InputSelect>
+            </label>
+        </div>
+        <div class="col-2">
+            <button type="submit">Add book</button>
+        </div>
+    </div>
+
+    @if (lastAddedType == Models.Book)
+    {
+        <div class="col alert-success">
+            @lastAddedName was added to books
+        </div>
+    }
+</EditForm>
+<hr />
+<br />
+
 @code {
-    private BookRequestDto book;
+    private BookRequestDto book = new BookRequestDto() { PublishedAt = DateTime.Now };
+    private string bookGenreName = string.Empty;
+    private string bookAuthorName = string.Empty;
+
     private GenreDto genre = new GenreDto();
     private AuthorDto author = new AuthorDto();
 
@@ -63,6 +134,12 @@
     private Models lastAddedType = Models.None;
     private string lastAddedName = "";
     private bool addingFailed = false;
+
+    protected async override Task OnInitializedAsync(){
+        await Model.ReadBooksAsync();
+        await Model.ReadAuthorsAsync();
+        await Model.ReadGenresAsync();
+    }
 
     private async void SubmitAuthor(){
         try
@@ -86,6 +163,24 @@
             addingFailed = false;
             lastAddedName = genre.Name;
             lastAddedType = Models.Genre;
+        }
+        catch
+        {
+            addingFailed = true;
+            lastAddedType = Models.None;
+        }
+        StateHasChanged();
+    }
+    private async void SubmitBook(){
+        try
+        {
+            book.AuthorId = Model.Authors.Where(a => a.Name == bookAuthorName).First().Id;
+            book.GenreId = Model.Genres.Where(g => g.Name == bookGenreName).First().Id;
+
+            await Model.AddBookAsync(book);
+            addingFailed = false;
+            lastAddedName = book.Name;
+            lastAddedType = Models.Book;
         }
         catch
         {
