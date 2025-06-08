@@ -21,6 +21,7 @@ namespace BookCatalog.DataAccess
             services.AddTransient<BooksService>();
             services.AddTransient<AuthorsService>();
             services.AddTransient<GenresService>();
+            services.AddTransient<UsersService>();
 
             services.AddIdentity<User,IdentityRole>(options =>
             {

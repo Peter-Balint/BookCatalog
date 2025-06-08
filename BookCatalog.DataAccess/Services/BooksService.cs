@@ -1,7 +1,6 @@
 ﻿
 using BookCatalog.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace BookCatalog.DataAccess.Services
 {

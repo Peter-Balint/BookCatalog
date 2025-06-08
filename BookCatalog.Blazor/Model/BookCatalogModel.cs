@@ -1,5 +1,7 @@
 ﻿
 using BookCatalog.Shared.DTOs;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 
 namespace BookCatalog.Blazor.Model
@@ -12,28 +14,15 @@ namespace BookCatalog.Blazor.Model
         public List<AuthorDto> Authors { get; private set; } = new List<AuthorDto>();
         public List<GenreDto> Genres { get; private set; } = new List<GenreDto>();
 
+        public Boolean IsUserLoggedIn { get; private set; }
+        public UserDto? User { get; private set; }
+
         public BookCatalogModel(HttpClient httpClient)
         {
             _client = httpClient;
+            IsUserLoggedIn = false;
+            User = null;
         }
-
-
-        //this can still be cool, but it doesn't work
-        public async Task ReadListAsync<Dto>(string endPoint, List<Dto> list)
-        {
-            HttpResponseMessage response = await _client.GetAsync($"api/{endPoint}/");
-
-            if (response.IsSuccessStatusCode)
-            {
-                list = await response.Content.ReadAsAsync<List<Dto>>();
-            }
-            else
-            {
-                throw new Exception("Service returned response: " + response.StatusCode);
-            }
-        }
-
-        
 
 
         public async Task ReadBooksAsync()
@@ -167,6 +156,76 @@ namespace BookCatalog.Blazor.Model
             {
                 throw new Exception("Service returned response: " + response.StatusCode);
             }
+        }
+
+        public async Task<Boolean> LoginAsync(string userName, string userPassword, bool useCookies = true)
+        {
+            IsUserLoggedIn = useCookies
+                ? await LoginAsync(userName, userPassword)
+                : await LoginTokenAsync(userName, userPassword);
+
+            return IsUserLoggedIn;
+        }
+
+        public async Task<Boolean> LoginAsync(string userName, string password)
+        {
+
+            HttpResponseMessage response = await _client.PostAsJsonAsync("api/users/login", new LoginDto
+            {
+                UserName = userName,
+                Password = password
+            });
+
+            if (response.IsSuccessStatusCode)
+            {
+                User = response.Content.ReadFromJsonAsync<UserDto>().Result;
+            }
+
+            return response.IsSuccessStatusCode;
+            
+        }
+        public async Task<Boolean> LoginTokenAsync(string userName, string password)
+        {
+            HttpResponseMessage response = await _client.PostAsJsonAsync("api/users/login-token", new LoginDto
+            {
+                UserName = userName,
+                Password = password
+            });
+
+            if (response.IsSuccessStatusCode &&
+                response.Headers.TryGetValues("X-Access-Token", out var values))
+            {
+                string? token = values.FirstOrDefault();
+                if (token != null)
+                {
+                    _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    User = response.Content.ReadFromJsonAsync<UserDto>().Result;
+                }
+            }
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<Boolean> RegisterAsync(LoginDto loginDto)
+        {
+            HttpResponseMessage response = await _client.PostAsJsonAsync("api/users/", loginDto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                User = response.Content.ReadFromJsonAsync<UserDto>().Result;
+            }
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<Boolean> LogoutAsync()
+        {
+            if (!IsUserLoggedIn)
+                return true;
+
+            HttpResponseMessage response = await _client.PostAsync("api/users/logout",null);
+            IsUserLoggedIn = !response.IsSuccessStatusCode;
+
+            return !IsUserLoggedIn;
         }
     }
 }

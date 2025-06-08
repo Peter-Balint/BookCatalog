@@ -2,12 +2,14 @@
 using BookCatalog.DataAccess.Models;
 using BookCatalog.DataAccess.Services;
 using BookCatalog.Shared.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookCatalog.WebAPI.Controllers
 {
     [ApiController]
     [Route("api/authors/")]
+    [Authorize]
     public class AuthorsController : ControllerBase
     {
         private readonly AuthorsService _authorsService;

@@ -2,12 +2,14 @@
 using BookCatalog.DataAccess.Models;
 using BookCatalog.DataAccess.Services;
 using BookCatalog.Shared.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookCatalog.WebAPI.Controllers
 {
     [ApiController]
     [Route("api/genres/")]
+    [Authorize]
     public class GenresController : ControllerBase
     {
         private readonly GenresService _genresService;

@@ -1,0 +1,72 @@
+﻿@using BookCatalog.Blazor.Model;
+@using BookCatalog.Shared.DTOs;
+
+@inject BookCatalogModel Model;
+@inject NavigationManager Navigation;
+
+@page "/login"
+
+<h3>Bejelentkezés</h3>
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        @if (loginFailed)
+        {
+            <div class="alert alert-danger" role="alert">
+                Login was unsuccesful!
+            </div>
+        }
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="email">Username:</label>
+                <InputText id="username" class="form-control" @bind-Value="loginModel.UserName" />
+                <ValidationMessage For="@(() => loginModel.UserName)" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="password">Password:</label>
+                <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
+                <ValidationMessage For="@(() => loginModel.Password)" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-end">
+                <button type="submit" class="btn btn-primary me-2">Login</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+Don't have an account?
+<button @onclick="GoToRegistration">Register</button>
+
+@code {
+    private LoginDto loginModel = new LoginDto();
+    private bool loginFailed = false;
+
+    private async Task HandleLogin()
+    {
+        
+        bool isAuthenticated = await Model.LoginAsync(loginModel.UserName, loginModel.Password, useCookies: false);
+
+        if (isAuthenticated)
+        {
+            loginFailed = false;
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            loginFailed = true;
+        }
+    }
+
+    private void GoToRegistration()
+    {
+        Navigation.NavigateTo("/registration");
+    }
+
+}

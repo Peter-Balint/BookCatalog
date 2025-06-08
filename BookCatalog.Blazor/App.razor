@@ -1,4 +1,6 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@using BookCatalog.Blazor.Model;
+
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -10,3 +12,20 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    [Inject]
+    private BookCatalogModel Model { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        if (!Model.IsUserLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+}
