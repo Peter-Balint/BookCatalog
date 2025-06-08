@@ -39,6 +39,17 @@ namespace BookCatalog.WebAPI.Controllers
             return Created();
         }
 
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateGenre([FromRoute] int id, [FromBody] GenreDto genreDto)
+        {
+            Genre genre = _mapper.Map<Genre>(genreDto);
+
+            await _genresService.UpdateAsync(id, genre);
+
+            return Ok();
+        }
+
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteGenre([FromRoute] int id)

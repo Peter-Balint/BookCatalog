@@ -35,6 +35,18 @@ namespace BookCatalog.DataAccess.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateAsync(int id, Genre genre)
+        {
+            Genre? genreToChange = await GetByIdAsync(id);
+            if (genreToChange == null) { return; }
+
+            _context.Update(genreToChange);
+
+            genreToChange.Name = genre.Name;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteAsync(int id)
         {
             Genre? genre = await GetByIdAsync(id);

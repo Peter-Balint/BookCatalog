@@ -63,6 +63,19 @@ namespace BookCatalog.Blazor.Model
                 throw new Exception("Service returned response: " + response.StatusCode);
             }
         }
+        public async Task UpdateBookAsync(int id, BookRequestDto book)
+        {
+            HttpResponseMessage response = await _client.PutAsJsonAsync("api/books/" + id, book);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await ReadBooksAsync();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
         public async Task DeleteBookAsync(int id)
         {
             HttpResponseMessage response = await _client.DeleteAsync("api/books/"+id);
@@ -132,6 +145,19 @@ namespace BookCatalog.Blazor.Model
         public async Task AddGenreAsync(GenreDto genre)
         {
             HttpResponseMessage response = await _client.PostAsJsonAsync("api/genres/", genre);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await ReadGenresAsync();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
+        public async Task UpdateGenreAsync(int id, GenreDto genre)
+        {
+            HttpResponseMessage response = await _client.PutAsJsonAsync("api/genres/" + id, genre);
 
             if (response.IsSuccessStatusCode)
             {
