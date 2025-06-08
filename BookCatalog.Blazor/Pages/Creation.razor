@@ -139,6 +139,9 @@
         await Model.ReadBooksAsync();
         await Model.ReadAuthorsAsync();
         await Model.ReadGenresAsync();
+
+        bookAuthorName = Model.Authors[0].Name;
+        bookGenreName = Model.Genres[0].Name;
     }
 
     private async void SubmitAuthor(){
