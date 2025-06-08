@@ -9,6 +9,7 @@ namespace BookCatalog.Shared.DTOs
         public int Id { get; set; }
 
         [MaxLength(255)]
+        [MinLength(1)]
         public string Name { get; set; } = string.Empty;
     }
 }

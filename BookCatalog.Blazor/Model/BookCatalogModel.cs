@@ -102,6 +102,19 @@ namespace BookCatalog.Blazor.Model
                 throw new Exception("Service returned response: " + response.StatusCode);
             }
         }
+        public async Task UpdateAuthorAsync(int id, AuthorDto author)
+        {
+            HttpResponseMessage response = await _client.PutAsJsonAsync("api/authors/"+id, author);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await ReadAuthorsAsync();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
 
         public async Task ReadGenresAsync()
         {

@@ -39,6 +39,17 @@ namespace BookCatalog.WebAPI.Controllers
             return Created();
         }
 
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateAuthor([FromRoute] int id, [FromBody] AuthorDto authorDto)
+        {
+            Author author = _mapper.Map<Author>(authorDto);
+
+            await _authorsService.UpdateAsync(id, author);
+
+            return Ok();
+        }
+
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteAuthor([FromRoute] int id)
