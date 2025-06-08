@@ -1,0 +1,70 @@
+﻿@using BookCatalog.Blazor.Model;
+@using BookCatalog.Shared.DTOs;
+
+@inject BookCatalogModel VotingModel;
+@inject NavigationManager Navigation;
+
+@page "/registration"
+
+<h3>Registration</h3>
+<EditForm Model="regModel" OnValidSubmit="HandleRegistration">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        @if (registrationFailed)
+        {
+            <div class="alert alert-danger" role="alert">
+                Registration was unsuccessful!
+            </div>
+        }
+        <div class="row mb-3">
+            <div class="col">
+                <label for="name">Username:</label>
+                <InputText id="name" class="form-control" @bind-Value="regModel.UserName" />
+                <ValidationMessage For="@(() => regModel.UserName)" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="password">Password:</label>
+                <InputText id="password" type="password" class="form-control" @bind-Value="regModel.Password" />
+                <ValidationMessage For="@(() => regModel.Password)" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-end">
+                <button type="submit" class="btn btn-primary me-2">Register</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    private LoginDto regModel = new LoginDto();
+    private bool registrationFailed = false;
+
+    private async Task HandleRegistration()
+    {
+        if (await VotingModel.RegisterAsync(regModel))
+        {
+
+            bool isAuthenticated = await VotingModel.LoginAsync(regModel.UserName, regModel.Password!, useCookies: false);
+
+            if (isAuthenticated)
+            {
+                registrationFailed = false;
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                registrationFailed = true;
+            }
+        }
+        else
+        {
+            registrationFailed = true;
+        }
+
+    }
+}
