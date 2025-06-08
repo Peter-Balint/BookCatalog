@@ -22,16 +22,15 @@ namespace BookCatalog.DataAccess
             services.AddTransient<AuthorsService>();
             services.AddTransient<GenresService>();
             services.AddTransient<UsersService>();
+            services.AddTransient<RatingsService>();
 
             services.AddIdentity<User,IdentityRole>(options =>
             {
-                // Password settings.
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
 
-                // Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
                 options.Lockout.MaxFailedAccessAttempts = 10;
                 options.Lockout.AllowedForNewUsers = true;

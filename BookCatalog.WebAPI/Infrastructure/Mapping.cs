@@ -9,6 +9,7 @@ namespace BookCatalog.WebAPI.Infrastructure
         public Mapping()
         {
             CreateMap<Book, BookDto>();
+            CreateMap<BookDto, Book>();
             CreateMap<BookRequestDto, Book>(MemberList.Source);
 
             CreateMap<Author,AuthorDto>();
@@ -18,8 +19,11 @@ namespace BookCatalog.WebAPI.Infrastructure
 
             CreateMap<LoginDto, User>(MemberList.Source)
                 .ForSourceMember(src => src.Password, opt => opt.DoNotValidate());
-            //CreateMap<UserDto, User>();
+            CreateMap<UserDto, User>(MemberList.Source);
             CreateMap<User,UserDto>(MemberList.Destination);
+
+            CreateMap<Rating, RatingDto>();
+            CreateMap<RatingDto, Rating>(MemberList.Source);
         }
     }
 }
