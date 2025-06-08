@@ -63,6 +63,18 @@ namespace BookCatalog.Blazor.Model
                 throw new Exception("Service returned response: " + response.StatusCode);
             }
         }
+        public async Task DeleteBookAsync(int id)
+        {
+            HttpResponseMessage response = await _client.DeleteAsync("api/books/"+id);
+            if (response.IsSuccessStatusCode)
+            {
+                await ReadBooksAsync();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
 
         public async Task ReadAuthorsAsync() 
         {

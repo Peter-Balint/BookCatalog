@@ -28,17 +28,21 @@
             <th @onclick=" () => OrderListBy(b => b.Genre.Name) ">Genre</th>
             <th @onclick=" () => OrderListBy(b => b.PublishedAt) ">Published</th>
             <th>Score</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach(BookDto book in BooksDisplayed)
         {
-            <tr @onclick="()=>GoToDetailedBook(book.Id)">
-                <td>@book.Name</td>
+            <tr>
+                <td @onclick="()=>GoToDetailedBook(book.Id)" >@book.Name</td>
                 <td>@book.Author.Name</td>
                 <td>@book.Genre.Name</td>
                 <td>@book.PublishedAt.Year</td>
-
+                <td>-/10</td>
+                <td>
+                    <button @onclick="()=>Delete(book.Id)" class="alert-danger">Delete</button>
+                </td>
             </tr>
         }
     </tbody>
@@ -112,5 +116,10 @@
 
     private void GoToDetailedBook(int id){
         Navigation.NavigateTo($"/book/{id}");
+    }
+
+    private async Task Delete(int Id){
+        await Model.DeleteBookAsync(Id);
+        BooksDisplayed = Model.Books;
     }
 }
