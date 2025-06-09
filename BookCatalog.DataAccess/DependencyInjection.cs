@@ -30,6 +30,7 @@ namespace BookCatalog.DataAccess
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 0;
 
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
                 options.Lockout.MaxFailedAccessAttempts = 10;
