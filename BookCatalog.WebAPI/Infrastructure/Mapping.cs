@@ -24,6 +24,7 @@ namespace BookCatalog.WebAPI.Infrastructure
 
             CreateMap<Rating, RatingDto>();
             CreateMap<RatingDto, Rating>(MemberList.Source);
+            CreateMap<RatingRequestDto, Rating>(MemberList.Source);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace BookCatalog.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("bookId")]
+        [Route("{bookId}")]
         public async Task<IActionResult> GetByBookId([FromRoute] int bookId)
         {
             var ratings = await _ratingsService.GetByBookIdAsync(bookId);
@@ -34,7 +34,7 @@ namespace BookCatalog.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRating([FromBody] RatingDto ratingDto)
+        public async Task<IActionResult> AddRating([FromBody] RatingRequestDto ratingDto)
         {
             Rating rating = _mapper.Map<Rating>(ratingDto);
 

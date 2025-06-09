@@ -1,0 +1,18 @@
+﻿@using BookCatalog.Shared.DTOs;
+@using BookCatalog.Blazor.Model;
+
+<div class="container">
+    <div class="row">
+        <div class="col-8 justify-content-center">
+            @rating.User.UserName
+        </div>
+        <div class="col-4 justify-content-center">
+            @rating.Value / 10
+        </div>
+    </div>
+</div><hr />
+
+@code {
+    [Parameter]
+    public required RatingDto rating { get; set; }
+}

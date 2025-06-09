@@ -27,7 +27,6 @@
             <th @onclick=" () => OrderListBy(b => b.Author.Name) ">Author</th>
             <th @onclick=" () => OrderListBy(b => b.Genre.Name) ">Genre</th>
             <th @onclick=" () => OrderListBy(b => b.PublishedAt) ">Published</th>
-            <th>Score</th>
             <th></th>
         </tr>
     </thead>
@@ -39,7 +38,6 @@
                 <td>@book.Author.Name</td>
                 <td>@book.Genre.Name</td>
                 <td>@book.PublishedAt.Year</td>
-                <td>-/10</td>
                 <td>
                     <button @onclick="()=>Delete(book.Id)" class="alert-danger">Delete</button>
                 </td>

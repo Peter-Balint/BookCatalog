@@ -1,11 +1,15 @@
 ﻿
 
+using System.ComponentModel.DataAnnotations;
+
 namespace BookCatalog.Shared.DTOs
 {
     public record RatingDto
     {
-        public required BookDto Book { get; set; }
-        public required UserDto User { get; set; }
+        public BookDto Book { get; set; } = null!;
+        public UserDto User { get; set; } = null!;
+
+        [Range(1,10)]
         public int Value { get; set; }
     }
 }

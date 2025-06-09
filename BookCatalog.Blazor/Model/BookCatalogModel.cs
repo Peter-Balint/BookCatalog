@@ -17,6 +17,8 @@ namespace BookCatalog.Blazor.Model
         public Boolean IsUserLoggedIn { get; private set; }
         public UserDto? User { get; private set; }
 
+        public List<RatingDto> CurrentRatings { get; private set; }
+
         public BookCatalogModel(HttpClient httpClient)
         {
             _client = httpClient;
@@ -151,6 +153,33 @@ namespace BookCatalog.Blazor.Model
             if (response.IsSuccessStatusCode)
             {
                 await ReadGenresAsync();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
+
+        public async Task ReadCurrentRatingsAsync(int bookId)
+        {
+            HttpResponseMessage response = await _client.GetAsync("api/ratings/" + bookId);
+
+            if (response.IsSuccessStatusCode)
+            {
+                CurrentRatings = await response.Content.ReadAsAsync<List<RatingDto>>();
+            }
+            else
+            {
+                throw new Exception("Service returned response: " + response.StatusCode);
+            }
+        }
+        public async Task AddRatingAsync(RatingRequestDto rating)
+        {
+            HttpResponseMessage response = await _client.PostAsJsonAsync("api/ratings/", rating);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await ReadCurrentRatingsAsync(rating.BookId);
             }
             else
             {
